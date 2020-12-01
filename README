@@ -1,0 +1,18 @@
+# Advent of Code 2020
+
+This year, I'm going back to my roots, and writing a bunch of crappy Ruby
+solutions.
+
+Usually I try to learn a new language or solidify one I'm not comfortable in,
+but this year, I'm trying a different constraint -- speed.
+
+I want to try to solve these puzzles as _fast_ as possible. Even if that means
+shitty looking code or hobbled together structures. You can see this in day1's
+solution -- it's a thrown-together hash-of-arrays, but it took me about 20
+minutes to go from absolutely nothing to complete.
+
+After I've solved the puzzles, I'll go back and extract common ideas and try to
+refactor my way towards something I don't hate.
+
+Ultimately, this is an experiment in _extreme_ commitment to YAGNI / MVP and
+refactoring. We'll see how it works out.
