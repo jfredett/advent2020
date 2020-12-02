@@ -1,4 +1,6 @@
 class TaskData
+  include Enumerable
+
   def initialize(day)
     @path = "./data/#{day}.txt"
     @parsed = []
@@ -17,5 +19,9 @@ class TaskData
 
   def [](idx)
     @parsed[idx]
+  end
+
+  def each(&block)
+    @parsed.each(&block)
   end
 end
