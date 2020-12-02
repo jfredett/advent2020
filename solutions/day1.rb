@@ -1,4 +1,3 @@
-require 'pry'
 require 'data'
 
 DAY_DATA = TaskData.new 'day1'

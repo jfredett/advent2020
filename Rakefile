@@ -1,6 +1,6 @@
 task :run, [:day] do |t, args|
   puts "Running #{args[:day]}.rb"
-  system "bundle exec ruby -Ilib/ solutions/#{args[:day]}.rb"
+  system "bundle exec ruby -r./lib/prelude.rb -Ilib/ solutions/#{args[:day]}.rb"
 end
 
 task :new, [:day] do |t, args|

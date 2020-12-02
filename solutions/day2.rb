@@ -1,6 +1,4 @@
 require 'data'
-require 'pry'
-
 
 class Password
   def initialize(min_count, max_count, letter, pass)
