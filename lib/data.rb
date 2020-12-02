@@ -1,5 +1,8 @@
 class TaskData
   include Enumerable
+  extend Forwardable
+
+  delegate :each => :@parsed
 
   def initialize(day)
     @path = "./data/#{day}.txt"
@@ -11,17 +14,5 @@ class TaskData
     File.read(@path).each_line do |line|
       @parsed << yield(line)
     end
-  end
-
-  def length
-    @parsed.length
-  end
-
-  def [](idx)
-    @parsed[idx]
-  end
-
-  def each(&block)
-    @parsed.each(&block)
   end
 end
