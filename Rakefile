@@ -6,6 +6,6 @@ end
 task :new, [:day] do |t, args|
   puts "Creating #{args[:day]}.rb"
   system "touch solutions/#{args[:day]}.rb"
-  system "tough data/#{args[:day]}.txt"
+  system "touch data/#{args[:day]}.txt"
 end
 
