@@ -1,4 +1,8 @@
 class Passport
+  # NB: This should probably use some parameter-manager gem, but dry-* is kind of
+  # weird to work with and honestly, it doesn't matter _that_ much. If this gets
+  # unweildy it's a good opportunity for a refactor, but a quick spike left me
+  # not super happy with the result, so I'm gonna leave it.
   attr_accessor :expiration_year, :birth_year, :issue_year,
     :height, :haircolor, :eyecolor, :pid, :cid
 
@@ -31,25 +35,15 @@ class Passport
   end
 
   def incomplete?
-    [self.expiration_year.empty?,
-    self.birth_year.empty?,
-    self.issue_year.empty?,
-    self.height.empty?,
-    self.haircolor.empty?,
-    self.eyecolor.empty?,
-    self.pid.empty?,
-    ].any?
+    [self.expiration_year.empty?, self.birth_year.empty?, self.issue_year.empty?,
+    self.height.empty?, self.haircolor.empty?, self.eyecolor.empty?,
+    self.pid.empty?].any?
   end
 
   def valid?
-    self.complete? and
-      self.expiration_year_valid? and
-      self.birth_year_valid? and
-      self.issue_year_valid? and
-      self.height_valid? and
-      self.haircolor_valid? and
-      self.eyecolor_valid? and
-      self.pid_valid?
+    [self.complete?, self.expiration_year_valid?, self.birth_year_valid?,
+      self.issue_year_valid?, self.height_valid?, self.haircolor_valid?,
+      self.eyecolor_valid?, self.pid_valid?].all?
   end
 
   def invalid?
@@ -57,9 +51,6 @@ class Passport
   end
 
   private
-
-
-  # TODO: Should refactor this to use a validator thing at some point...
 
   def expiration_year_valid?
     year = self.expiration_year.to_i
@@ -108,7 +99,6 @@ class Passport
 
   alias inspect to_s
   def to_s
-
     ["","eyr: #{self.expiration_year}",
     "byr: #{self.birth_year}",
     "iyr: #{self.issue_year}",

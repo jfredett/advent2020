@@ -33,5 +33,5 @@ DAY_DATA.parse! do |line|
   Password.new(min_count, max_count, letter, pass)
 end
 
-puts "Part 1: #{DAY_DATA.filter(&:part_one_valid?).count} valid passwords."
-puts "Part 2: #{DAY_DATA.filter(&:part_two_valid?).count} valid passwords."
+puts "Part 1 | #{DAY_DATA.filter(&:part_one_valid?).count} valid passwords."
+puts "Part 2 | #{DAY_DATA.filter(&:part_two_valid?).count} valid passwords."

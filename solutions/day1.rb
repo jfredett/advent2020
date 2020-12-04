@@ -28,7 +28,7 @@ total_entries.times do |i|
 end
 
 # This is a pretty ugly structure, but piss-elegance is oft called for.
-puts "Answer to part A: #{answer[2020][1]}"
-puts "Answer to part B: #{answer[2020][0]}"
+puts "Part 1 | #{answer[2020][1]}"
+puts "Part 2 | #{answer[2020][0]}"
 
 

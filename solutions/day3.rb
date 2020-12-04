@@ -11,7 +11,6 @@ toboggans = [
   Toboggan.new(1,2)
 ]
 
-
 toboggans.each do |toboggan|
   map.ride!(toboggan)
 end
