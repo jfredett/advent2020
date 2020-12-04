@@ -47,8 +47,83 @@ class Passport
     ].any?
   end
 
+  def valid?
+    self.complete? and
+      self.expiration_year_valid? and
+      self.birth_year_valid? and
+      self.issue_year_valid? and
+      self.height_valid? and
+      self.haircolor_valid? and
+      self.eyecolor_valid? and
+      self.pid_valid?
+  end
+
+  def invalid?
+    not self.valid?
+  end
+
+  private
+
+
   # TODO: Should refactor this to use a validator thing at some point...
 
+  def expiration_year_valid?
+    year = self.expiration_year.to_i
+    self.expiration_year.length == 4 and year >= 2020 and year <= 2030
+  end
+
+  def birth_year_valid?
+    year = self.birth_year.to_i
+    self.birth_year.length == 4 and year >= 1920 and year <= 2002
+  end
+
+  def issue_year_valid?
+    year = self.issue_year.to_i
+    self.issue_year.length == 4 and year >= 2010 and year <= 2020
+  end
+
+  def height_valid?
+    case self.height
+    when /^\d+cm$/
+      height = self.height.gsub('cm','').to_i
+      return (height >= 150 and height <= 193)
+    when /^(\d+)in$/
+      height = self.height.gsub('in','').to_i
+      return (height >= 59 and height <= 76)
+    else
+      return false
+    end
+  end
+
+  def haircolor_valid?
+    self.haircolor =~ /^#[0-9a-f]{6}$/
+  end
+
+  VALID_EYE_COLORS = [
+    "amb", "blu", "brn", "gry", "grn", "hzl", "oth"
+  ]
+
+  def eyecolor_valid?
+    self.eyecolor.length == 3 and VALID_EYE_COLORS.include?(self.eyecolor)
+  end
+
+  def pid_valid?
+    self.pid.length == 9
+    self.pid =~ /^[0-9]{9}$/
+  end
+
+  alias inspect to_s
+  def to_s
+
+    ["","eyr: #{self.expiration_year}",
+    "byr: #{self.birth_year}",
+    "iyr: #{self.issue_year}",
+    "hgt: #{self.height}",
+    "hcl: #{self.haircolor}",
+    "ecl: #{self.eyecolor}",
+    "pid: #{self.pid}",
+    "cid: #{self.cid}"].join("\n")
+  end
 end
 
 
@@ -65,5 +140,9 @@ data.each_line do |line|
   end
 end
 
-puts "Part 1 | Valid Passports: #{data.select(&:complete?).count}"
-#puts "Part 2 | Product of Trees hit: #{toboggans.map(&:performance).reduce(&:*)}"
+puts data.select(&:valid?).map(&:expiration_year).map(&:to_i).select { |y| y <= 2020 }
+
+
+
+puts "Part 1 | Complete Passports: #{data.select(&:complete?).count}"
+puts "Part 2 | Valid Passports: #{data.select(&:valid?).count}"
