@@ -21,6 +21,12 @@ class TaskData
     File.read(@path).each_line(&block)
   end
 
+  def parse_by_chunk!
+    File.read(@path).split("\n\n").each do |chunk|
+      self.add_parsed_entry!(yield(chunk))
+    end
+  end
+
   def add_parsed_entry!(entry)
     @parsed << entry
   end
