@@ -3,6 +3,10 @@ require 'data'
 
 # specifies a rule about what bags it can contain
 class BagRule
+  extend Forwardable
+
+  delegate [:each, :filter] => :contained_colors
+
   def initialize(rule_text)
     @rule_text = rule_text
     parse_rule!
@@ -28,14 +32,12 @@ class BagRule
     @parent_color = antecedent.chop.split('bags')[0].chop
     @content_rules = {}
 
-    consequent.split(',').each do |rule|
-      matches = /(?<qty>(\d+|no)) (?<color>\D+) bags?\.?/.match(rule)
+    if consequent !~ /no other bags/
+      consequent.split(',').each do |rule|
+        matches = /(?<qty>(\d+|no)) (?<color>\D+) bags?\.?/.match(rule)
 
-      @content_rules[matches[:color]] = if matches[:qty] == "no"
-                                          0
-                                        else
-                                          matches[:qty].to_i
-                                        end
+        @content_rules[matches[:color]] = matches[:qty].to_i
+      end
     end
   end
 end
@@ -67,11 +69,11 @@ class BagGroup
       initial_size = gold_bags.length
 
       @rules.each do |color, contents|
-        contents = contents.contained_colors
+        color_contents = contents.contained_colors
 
         # If any of the contained colors are in the set of bags we know can
         # contain a gold bag
-        if contents.intersect? gold_bags
+        if color_contents.intersect? gold_bags
           # add in the new parent color
           gold_bags << color
         end
@@ -82,14 +84,40 @@ class BagGroup
 
     gold_bags
   end
+
+  def count_gold_bag_contents!
+    # Start at gold bag, visit it's children and add to the tally
+    neighbors = [SHINY_GOLD]
+    # this starts at -1 because we don't count the first bag.
+    qty = -1
+
+    until neighbors.empty?
+      next_neighbor = @rules[neighbors.shift]
+
+      next_neighbor.each do |color, count|
+        count.times { neighbors << color }
+      end
+      qty += 1
+    end
+
+    qty
+  end
 end
 
 
-data = TaskData.new('day7')
-data.parse! do |line|
-  BagRule.new(line.chomp)
+def bag_group(day)
+  data = TaskData.new(day)
+  data.parse! do |line|
+    BagRule.new(line.chomp)
+  end
+
+  BagGroup.new(data.to_a)
 end
 
-group = BagGroup.new(data.to_a)
+group = bag_group('day7')
+test = bag_group('day7-test')
+
 
 puts "Part 1 | Gold Bag Containers: #{group.find_gold_bags!.length}"
+puts "Test 1 | Gold Bag Contents: #{test.count_gold_bag_contents!}"
+puts "Part 2 | Gold Bag Contents: #{group.count_gold_bag_contents!}"
