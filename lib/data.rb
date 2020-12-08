@@ -2,7 +2,9 @@ class TaskData
   include Enumerable
   extend Forwardable
 
-  delegate [:length, :[], :each] => :@parsed
+  delegate [:length, :[], :each] => :parsed
+
+  attr_accessor :parsed
 
   def initialize(day)
     @path = "./data/#{day}.txt"
