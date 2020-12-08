@@ -9,6 +9,7 @@ answer = {}
 
 total_entries = DAY_DATA.length
 
+# This is a pretty ugly structure, but piss-elegance is oft called for.
 total_entries.times do |i|
   entry_a = DAY_DATA[i]
 
@@ -27,8 +28,12 @@ total_entries.times do |i|
   end
 end
 
-# This is a pretty ugly structure, but piss-elegance is oft called for.
-puts "Part 1 | #{answer[2020][1]}"
-puts "Part 2 | #{answer[2020][0]}"
+Result.output do
+  part(1, "Entry pair that sums to 2020") do
+    answer[2020][1][-1]
+  end
 
-
+  part(2, "Entry triple that sums to 2020") do
+    answer[2020][0][-1]
+  end
+end

@@ -17,8 +17,16 @@ end
 
 part1_toboggan = toboggans[1]
 
-puts "Part 1 | Trees hit: #{part1_toboggan.performance}"
-puts "Part 2 | Product of Trees hit: #{toboggans.map(&:performance).reduce(&:*)}"
+Result.output do
+  part 1, "Trees hit" do
+    part1_toboggan.performance
+  end
+
+  part 2, "Product of Trees hit" do
+    toboggans.map(&:performance).reduce(&:*)
+  end
+end
+
 
 __END__
 

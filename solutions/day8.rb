@@ -92,10 +92,13 @@ end
 
 vm = VM.new(data.parsed)
 
-puts "Part 1 | Acc after infinite loop: #{vm.run!}"
-
-part2 = VM.try_repair!(data.parsed).filter do |vm|
-  result, _ = *vm.run!
-  result == :repaired!
+Result.output do
+  part 1, "Acc after infinite loop" do vm.run! end
+  part 2, "Acc after repair" do
+    VM.try_repair!(data.parsed).filter do |vm|
+      result, _ = *vm.run!
+      result == :repaired!
+    end[0].acc
+  end
 end
-puts "Part 2 | Acc after repair: #{part2[0].acc}"
+

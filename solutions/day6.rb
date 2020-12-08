@@ -10,6 +10,7 @@ data.parse_by_chunk! do |chunk|
   CustomsGroup.new( entries.map { |e| CustomsDeclaration.new(e.chomp) } )
 end
 
-
-puts "Part 1 | Sum of all total declarations: #{data.map(&:total_declarations).sum}"
-puts "Part 2 | Sum of all common declarations: #{data.map(&:total_common_declarations).sum}"
+Result.output do
+  part 1, "Sum of all total declarations" do data.map(&:total_declarations).sum end
+  part 2, "Sum of all common declarations" do data.map(&:total_common_declarations).sum end
+end

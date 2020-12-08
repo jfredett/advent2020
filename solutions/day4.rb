@@ -14,5 +14,13 @@ data.each_line do |line|
   end
 end
 
-puts "Part 1 | Complete Passports: #{data.select(&:complete?).count}"
-puts "Part 2 | Valid Passports: #{data.select(&:valid?).count}"
+Result.output do
+  part 1, "Complete Passports" do
+    data.select(&:complete?).count
+  end
+
+  part 2, "Valid Passports" do
+    data.select(&:valid?).count
+  end
+end
+
