@@ -1,2 +1,2 @@
-require 'customs_declaration'
-require 'customs_group'
+require 'customs/customs_declaration'
+require 'customs/customs_group'

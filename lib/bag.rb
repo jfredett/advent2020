@@ -1,5 +1,5 @@
-require 'bag_group'
-require 'bag_rule'
+require 'bag/bag_group'
+require 'bag/bag_rule'
 
 def mk_bag_group(day)
   data = TaskData.new(day)
