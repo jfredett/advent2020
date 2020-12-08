@@ -83,16 +83,16 @@ class VM
 end
 
 
-data = TaskData.new('day8')
-
-
-data.parse! do |line|
-  Instruction.new(line.chomp)
-end
-
-vm = VM.new(data.parsed)
 
 Result.output do
+  data = TaskData.new('day8')
+
+  data.parse! do |line|
+    Instruction.new(line.chomp)
+  end
+
+  vm = VM.new(data.parsed)
+
   part 1, "Acc after infinite loop" do vm.run! end
   part 2, "Acc after repair" do
     VM.try_repair!(data.parsed).filter do |vm|
