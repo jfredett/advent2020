@@ -5,7 +5,13 @@ require 'pry'
 # A cheap little thing for making my output look consistent
 class Result
   def self.part(number, message)
-    puts "Part #{number} | #{message}: #{yield} "
+    @answers ||= []
+    @answers[number] = yield
+    puts "Part #{number} | #{message}: #{@answers[number]} "
+  end
+
+  def self.answer(opts = {})
+    @answers[opts[:for]]
   end
 
   def self.test(message)
