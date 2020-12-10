@@ -1,5 +1,6 @@
 require 'forwardable'
 require 'pry'
+require 'data'
 
 
 # A cheap little thing for making my output look consistent
@@ -17,7 +18,7 @@ class Result
   def self.test(message)
     @test_count ||= 0
     @test_count += 1
-    if yield
+    if result = yield
       puts "Test #{@test_count} | ✓ | #{message}"
     else
       puts "Test #{@test_count} | ⤫ | #{message}"
