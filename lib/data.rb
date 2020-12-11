@@ -18,6 +18,11 @@ class TaskData
     end
   end
 
+  # Just give me the whole input and I'll do whatever with it
+  def custom_parse!
+    self.add_parsed_entry! yield(File.read(@path))
+  end
+
   def each_line(&block)
     # TODO: Make this a forwarded method
     File.read(@path).each_line(&block)
