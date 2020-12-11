@@ -40,6 +40,11 @@ class Result
     @data_parsed = true
   end
 
+  def self.custom_parse!(&block)
+    @data.custom_parse!(&block)
+    @data_parsed = true
+  end
+
   def self.parse_by_chunk!(&block)
     @data.parse_by_chunk!(&block)
     @data_parsed = true
