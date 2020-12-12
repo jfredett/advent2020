@@ -34,30 +34,7 @@ module Day12
     end
   end
 
-  class Ferry
-    extend Forwardable
-
-    delegate [:left!, :right!, :facing] => :@compass
-    attr_accessor :lat, :long
-
-    def initialize
-      @lat = 0
-      @long = 0
-      @compass = Compass.new
-    end
-
-    def run!(instruction)
-      instruction.apply!(to: self)
-    end
-
-    def distance_from_origin
-      @lat.abs + @long.abs
-    end
-
-  end
-
   class FerryInstruction
-
     attr_reader :dir, :arg
 
     def initialize(raw)
@@ -99,6 +76,135 @@ module Day12
     end
   end
 
+  class Ferry
+    extend Forwardable
+
+    delegate [:left!, :right!, :facing] => :@compass
+    attr_accessor :lat, :long
+
+    def initialize(waypoint: nil)
+      @lat = 0
+      @long = 0
+      @compass = Compass.new
+      @waypoint = waypoint
+    end
+
+    def run!(instruction)
+      if @waypoint.nil?
+        self.send(instruction.dir, instruction)
+      else
+        @waypoint.send(instruction.dir, instruction, self)
+      end
+    end
+
+    def distance_from_origin
+      @lat.abs + @long.abs
+    end
+
+    def n(instruction)
+      self.long += instruction.arg
+    end
+
+    def s(instruction)
+      self.long -= instruction.arg
+    end
+
+    def e(instruction)
+      self.lat += instruction.arg
+    end
+
+    def w(instruction)
+      self.lat -= instruction.arg
+    end
+
+    def l(instruction)
+      left!(instruction.arg)
+    end
+
+    def r(instruction)
+      right!(instruction.arg)
+    end
+
+    def f(instruction, towards: nil)
+      # this changes if we're moving towards a waypoint or not
+      if towards.nil?
+        # If we don't have a waypoint, just drive forward
+        self.send(facing, instruction)
+      else
+        # The waypoint provides our vector, so we adjust along it the
+        # appropriate number of times
+        instruction.arg.times do
+          # these will be negative if appropriate
+          dlat, dlong = *@waypoint.vector
+          self.lat += dlat
+          self.long += dlong
+        end
+      end
+    end
+  end
+
+  class Waypoint
+    extend Forwardable
+
+    attr_accessor :lat, :long
+
+    def initialize
+      @lat = 10
+      @long = 1
+    end
+
+    def vector
+      [@lat, @long]
+    end
+
+    def run!(instruction)
+      instruction.apply!(to: self)
+    end
+
+    def distance_from_origin
+      @lat.abs + @long.abs
+    end
+
+    def n(instruction, ferry)
+      self.long += instruction.arg
+    end
+
+    def s(instruction, ferry)
+      self.long -= instruction.arg
+    end
+
+    def e(instruction, ferry)
+      self.lat += instruction.arg
+    end
+
+    def w(instruction, feryy)
+      self.lat -= instruction.arg
+    end
+
+    def l(instruction, ferry)
+      (instruction.arg / 90).times do
+        old_lat = @lat
+        old_long = @long
+        @lat = -old_long
+        @long = old_lat
+      end
+    end
+
+    def r(instruction, ferry)
+      (instruction.arg / 90).times do
+        old_lat = @lat
+        old_long = @long
+        @lat = old_long
+        @long = -old_lat
+      end
+    end
+
+    def f(instruction, ferry)
+      ferry.f(instruction, towards: self)
+    end
+
+  end
+
   Result.output for: 'day12' do
     parse! do |line|
       FerryInstruction.new(line.chomp)
@@ -128,7 +234,7 @@ module Day12
       facing_tests.all?
     end
 
-    test "Small Example" do
+    test "Direct-instruction-based Small Example" do
       instructions = ["F10", "N3", "F7", "R90", "F11"].map { |i| FerryInstruction.new(i) }
       ferry = Ferry.new
       instructions.each do |i|
@@ -138,7 +244,7 @@ module Day12
       ferry.distance_from_origin == 25
     end
 
-    part 1, "Ferry Ride" do
+    part 1, "Direct-instruction-based Ferry Ride" do
       ferry = Ferry.new
       data.each do |i|
         ferry.run!(i)
@@ -147,6 +253,28 @@ module Day12
       ferry.distance_from_origin
     end
 
+    test "Waypoint-based Small Example" do
+      instructions = ["F10", "N3", "F7", "R90", "F11"].map { |i| FerryInstruction.new(i) }
+      waypoint = Waypoint.new
+      ferry = Ferry.new(waypoint: waypoint)
+
+      instructions.each do |i|
+        ferry.run!(i)
+      end
+
+      ferry.distance_from_origin == 286
+    end
+
+    part 2, "Waypoint-based Ferry Ride" do
+      waypoint = Waypoint.new
+      ferry = Ferry.new(waypoint: waypoint)
+
+      data.each do |i|
+        ferry.run!(i)
+      end
+
+      ferry.distance_from_origin
+    end
   end
 
 end
