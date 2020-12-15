@@ -71,4 +71,9 @@ Result.output for: 'day15' do
     seq.turn(2020)
   end
 
+  part 2, "30000000th number in the sequence" do
+    seq = Sequence.new(data)
+    seq.turn(30000000)
+  end
+
 end
